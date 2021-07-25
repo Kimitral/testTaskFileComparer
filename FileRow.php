@@ -58,11 +58,23 @@ class FileRow
         return self::$statusToSymbol[$this->status] ?? self::$statusToSymbol[0];
     }
 
+    public function addRowToText(FileRow $row)
+    {
+        $this->setText($this->getText() . '|' . $row->getText());
+    }
+
+
     public function toString(int $rowCount, FileRow $secondRow = null): string
     {
         $result = $rowCount . ' ' . $this->symbolStatus() . ' ' . $this->getText();
-        if ($secondRow) $result .= '|' . $secondRow->getText();
+        if ($secondRow) $this->addRowToText($secondRow);
         return $result;
+    }
+
+    public function buildTableTD(int $rowCount, FileRow $secondRow = null): string
+    {
+        if ($secondRow) $this->addRowToText($secondRow);
+        return "<td>$rowCount</td><td>" . $this->symbolStatus() . "</td> <td>" . $this->getText() . "</td>";
     }
 
 }

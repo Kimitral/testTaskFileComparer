@@ -38,7 +38,7 @@ class FileCompere
 
         }
         $result = $this->lastPopup($result);
-        return $this->arrayWithStrings($result);
+        return $this->buildTable($result);
     }
 
     public function convertSearched(array $searchResult, array $result): array
@@ -58,6 +58,23 @@ class FileCompere
     public function lastPopup(array $result): array
     {
         return array_merge($result, FileStatusGiver::giveStatus($this->file1->popStackToIndex(), $this->file2->popStackToIndex()));
+    }
+
+    public function buildTable(array $table): string
+    {
+        $result = "<table>";
+
+        foreach ($table as $index => $element) {
+            $result .= "<tr>";
+            if (is_array($element)) {
+                $result .= $element[0]->buildTableTD($index, $element[1]);
+                continue;
+            }
+            $result .= $element->buildTableTD($index);
+            $result .= "<tr/>";
+        }
+        $result .= "<table/>";
+        return $result;
     }
 
     public function arrayWithStrings($result): array
